@@ -1,0 +1,4 @@
+.input:checked ~ .checkmark:before {
+  background: rgb(52 211 153 / 1);
+  display: block;
+}
