@@ -5,19 +5,18 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   children?: ReactNode;
 }
 
-export function Input({ label, type, placeholder, children }: InputProps) {
+export function Input({ label, type, placeholder, children, ...rest }: InputProps) {
   return (
     <div
       className="w-full flex flex-col max-w-xs relative"
     >
-      <label htmlFor={label}>
-        {label}
-      </label>
+      <label htmlFor={label}>{label}</label>
       <input
         className="w-full h-10 bg-gray-100 rounded-lg px-4 mt-1"
         id={label}
         type={type}
         placeholder={placeholder}
+        {...rest}
       />
       {children}
     </div>
