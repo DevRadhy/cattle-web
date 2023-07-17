@@ -12,6 +12,7 @@ type AuthContextType = {
 type User = {
   name: string;
   email: string;
+  id: string;
 }
 
 type SignInData = {
@@ -36,12 +37,13 @@ export function AuthProvider({ children }: AuthContextProviderProps) {
     // Verificar se possui algum token nos cookies
     const { token } = parseCookies();
 
-    if(!token) {
-      router.push("/login");
-    };
+    if(!token) return;
 
     // Se existir, buscar informações do usuário e salvar no estado
-  }, [router]);
+    api.get(`/users/${user?.id}`).then((response) => {
+      setUser(response.data);
+    });
+  }, [user]);
 
  async function signIn({ email, password }: SignInData) {
    try {
@@ -53,13 +55,16 @@ export function AuthProvider({ children }: AuthContextProviderProps) {
     
     // Salvar token do usuário nos cookies
     setCookie(undefined, "token", data.token);
+
+    // Adicionar token ao header das requisições
+    api.defaults.headers['Authorization'] = `Bearer ${data.token}`;
   
     // Salvar informações do usuário em um estado
     setUser(data);
 
     router.push("/");
   } catch(err) {
-    console.log("error");
+    console.log("login error");
   }
  }
 
