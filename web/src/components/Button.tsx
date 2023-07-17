@@ -8,7 +8,7 @@ export function Button({ text, ...rest }: ButtonProps) {
   return (
     <div>
       <button
-        className="w-24 h-10 rounded-lg text-white font-bold bg-emerald-400 absolute bottom-0 right-0 mr-12 mb-12"
+        className="w-full h-10 rounded-lg text-white font-bold bg-green-600"
         type="button"
         {...rest}
       >
