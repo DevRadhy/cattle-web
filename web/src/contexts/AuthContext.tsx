@@ -1,13 +1,15 @@
 import { api } from "@/services/api";
 import { useRouter } from "next/router";
-import { parseCookies, setCookie } from "nookies";
+import { destroyCookie, parseCookies, setCookie } from "nookies";
 import { ReactNode, createContext, useEffect, useState } from "react";
 
 type AuthContextType = {
   isAuthenticated: boolean;
   user: User | null;
   signIn: (data: SignInData) => Promise<void>;
+  signOut: () => Promise<void>;
   register: (data: RegisterData) => Promise<void>;
+  refreshToken: () => Promise<void>;
 };
 
 type User = {
@@ -35,29 +37,41 @@ export const AuthContext = createContext({} as AuthContextType);
 
 export function AuthProvider({ children }: AuthContextProviderProps) {
   const [ user, setUser ] = useState<User | null>(null);
-
   const router = useRouter();
 
   const isAuthenticated = !!user;
 
   useEffect(() => {
-    const { token } = parseCookies();
+  }, []);
 
-    if(!token) return;
+  async function refreshToken() {
+    const { 'refresh_token': refreshToken } = parseCookies();
 
-    api.get(`/users/${user?.id}`).then((response) => {
-      setUser(response.data);
+    const { data } = await api.post("/auth/refresh", null, {
+      headers: {
+        'Authorization': `Bearer ${refreshToken}`
+      }
     });
-  }, [user]);
 
- async function signIn({ email, password }: SignInData) {
+    setCookie(undefined, "token", data.token);
+    setCookie(undefined, "refresh_token", data.refreshToken);
+
+    api.defaults.headers['Authorization'] = `Bearer ${data.token}`;
+  }
+
+  async function signIn({ email, password }: SignInData) {
    try {
-    const { data } = await api.post("/users/login", {
+    const { data } = await api.post("/auth", {
         email,
         password,
       });
     
-    setCookie(undefined, "token", data.token);
+    setCookie(undefined, "token", data.token, {
+      maxAge: 60 * 15, // 15 minutes
+    });
+    setCookie(undefined, "refresh_token", data.refresh_token, {
+      maxAge: 60 * 60 * 24 * 30, // 30 days
+    });
 
     api.defaults.headers['Authorization'] = `Bearer ${data.token}`;
   
@@ -67,9 +81,18 @@ export function AuthProvider({ children }: AuthContextProviderProps) {
   } catch(err) {
     console.log("login error");
   }
- }
+  }
 
- async function register({ name, email, password }: RegisterData) {
+  async function signOut() {
+    destroyCookie(undefined, "refresh_token");
+    destroyCookie(undefined, "token");
+
+    setUser(null);
+
+    router.push("/login");
+  }
+
+  async function register({ name, email, password }: RegisterData) {
   try {
     const { data } = await api.post("/users/register", {
         name,
@@ -83,10 +106,10 @@ export function AuthProvider({ children }: AuthContextProviderProps) {
   } catch(err) {
     console.log("register error");
   }
- }
+  }
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, signIn, register }}>
+    <AuthContext.Provider value={{ user, isAuthenticated, signIn, register, signOut, refreshToken }}>
       {children}
     </AuthContext.Provider>
   );
