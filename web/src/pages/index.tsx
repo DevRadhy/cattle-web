@@ -1,9 +1,32 @@
+import { NavBar } from "@/components/NavBar";
 import { Resource } from "@/components/Resource";
-import { ArrowRightCircleIcon, BellIcon } from "lucide-react";
-import { ActivityIcon, CalendarIcon, ClockIcon, HomeIcon, LayoutGridIcon, PercentIcon, UserIcon } from "lucide-react";
+import { AuthContext } from "@/contexts/AuthContext";
+import { ActivityIcon, CalendarIcon, ClockIcon, PercentIcon, ArrowRightCircleIcon } from "lucide-react";
+import { GetServerSideProps } from "next";
 import Image from "next/image";
+import { parseCookies } from "nookies";
+import { useContext } from "react";
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const { token } = parseCookies(ctx);
+
+  if (!token) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      }
+    }
+  }
+
+  return {
+    props: {}
+  }
+}
 
 export default function Home() {
+  const { user } = useContext(AuthContext);
+
   return (
     <div>
       <header
@@ -15,7 +38,7 @@ export default function Home() {
           <span
             className="text-white font-bold text-base"
           >
-            Oi, Lucas
+            Oi, {user?.name.split(' ')[0]}
 
               <span
                 className="text-xl"
@@ -144,16 +167,7 @@ export default function Home() {
         </a>
       </main>
 
-
-
-      <div
-        className="flex w-full bg-green-600 h-16 justify-around items-center bottom-0 fixed rounded-t-xl"
-      >
-        <HomeIcon color="white"/>
-        <LayoutGridIcon color="white"/>
-        <BellIcon color="white"/>
-        <UserIcon color="white"/>
-      </div>
+      <NavBar />
     </div>
   );
 }
