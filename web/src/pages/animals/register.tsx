@@ -2,13 +2,16 @@ import { Input } from "@/components/Input";
 import { Radio } from "@/components/Radio";
 import { Button } from "@/components/Button";
 import { Textarea } from "@/components/Textarea";
+import { BackButton } from "@/components/BackButton";
 
 
 export default function Register() {
   return (
     <div
-      className="w-80 h-screen flex flex-col justify-center items-center m-auto"
+      className="w-full h-screen flex flex-col justify-center items-center m-auto px-8"
     >
+      <BackButton />
+
       <h1>Controle de Nascimento</h1>
 
       <div
@@ -73,6 +76,7 @@ export default function Register() {
       </div>
 
       <Button
+        className="w-24 h-10 rounded-lg text-white font-bold bg-green-600 absolute bottom-10 right-10"
         text="Salvar"
       />
     </div>
