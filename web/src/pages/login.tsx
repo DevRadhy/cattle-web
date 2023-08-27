@@ -37,7 +37,7 @@ export default function Login() {
         >
           <Input
             label="Email"
-            type="text"
+            type="email"
             value={email}
             autoComplete="true"
             required
