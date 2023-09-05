@@ -9,7 +9,6 @@ type AuthContextType = {
   signIn: (data: SignInData) => Promise<void>;
   signOut: () => Promise<void>;
   register: (data: RegisterData) => Promise<void>;
-  refreshToken: () => Promise<void>;
 };
 
 type User = {
@@ -44,21 +43,6 @@ export function AuthProvider({ children }: AuthContextProviderProps) {
   useEffect(() => {
   }, []);
 
-  async function refreshToken() {
-    const { 'refresh_token': refreshToken } = parseCookies();
-
-    const { data } = await api.post("/auth/refresh", null, {
-      headers: {
-        'Authorization': `Bearer ${refreshToken}`
-      }
-    });
-
-    setCookie(undefined, "token", data.token);
-    setCookie(undefined, "refresh_token", data.refreshToken);
-
-    api.defaults.headers['Authorization'] = `Bearer ${data.token}`;
-  }
-
   async function signIn({ email, password }: SignInData) {
    try {
     const { data } = await api.post("/auth", {
@@ -67,7 +51,7 @@ export function AuthProvider({ children }: AuthContextProviderProps) {
       });
     
     setCookie(undefined, "token", data.token, {
-      maxAge: 60 * 15, // 15 minutes
+      maxAge: 15, // 15 minutes
     });
     setCookie(undefined, "refresh_token", data.refresh_token, {
       maxAge: 60 * 60 * 24 * 30, // 30 days
@@ -109,7 +93,7 @@ export function AuthProvider({ children }: AuthContextProviderProps) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, signIn, register, signOut, refreshToken }}>
+    <AuthContext.Provider value={{ user, isAuthenticated, signIn, register, signOut }}>
       {children}
     </AuthContext.Provider>
   );
