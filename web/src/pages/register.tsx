@@ -39,11 +39,23 @@ export default function Register() {
       <FormProvider {...createRegisterForm}>
         <form id="register" onSubmit={handleSubmit(onSubmit)}>
           <div className="mt-12 grid justify-center gap-6">
-            <Input label="Nome" type="text" autoComplete="true" required />
+            <Input
+              label="Nome"
+              type="text"
+              id="name"
+              autoComplete="true"
+              required
+            />
 
-            <Input label="Email" type="email" autoComplete="true" required />
+            <Input
+              label="Email"
+              type="email"
+              id="email"
+              autoComplete="true"
+              required
+            />
 
-            <Input label="Senha" type="password" required />
+            <Input label="Senha" type="password" id="password" required />
 
             <Button text="Registrar" type="submit" form="register" />
 
