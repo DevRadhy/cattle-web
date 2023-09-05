@@ -12,7 +12,7 @@ type RegisterProps = {
   name: string;
   email: string;
   password: string;
-}
+};
 
 export default function Register() {
   const createRegisterForm = useForm<RegisterProps>();
@@ -22,77 +22,54 @@ export default function Register() {
 
   const onSubmit: SubmitHandler<RegisterProps> = async (data) => {
     await signUp(data);
-  }
-  
+  };
+
   return (
-    <div className="w-screen h-screen md:grid md:grid-flow-col md:grid-cols-2 md:items-center">
+    <div className="h-screen w-screen md:grid md:grid-flow-col md:grid-cols-2 md:items-center">
       <Head>
         <title>Registrar | Rebanho Bovino</title>
       </Head>
 
-      <div
-        className="h-2/5 bg-green-600 flex justify-center items-center md:h-full"
-      >
-        <h1 className="text-white text-center m-4">Plataforma de controle e gestão pecuária.</h1>
+      <div className="flex h-2/5 items-center justify-center bg-green-600 md:h-full">
+        <h1 className="m-4 text-center text-white">
+          Plataforma de controle e gestão pecuária.
+        </h1>
       </div>
 
-      <FormProvider  {...createRegisterForm}>
+      <FormProvider {...createRegisterForm}>
         <form id="register" onSubmit={handleSubmit(onSubmit)}>
-          <div
-            className="mt-12 grid gap-6 justify-center"
-          >
-            <Input
-              label="Nome"
-              type="text"
-              autoComplete="true"
-              required
-            />
+          <div className="mt-12 grid justify-center gap-6">
+            <Input label="Nome" type="text" autoComplete="true" required />
 
-            <Input
-              label="Email"
-              type="email"
-              autoComplete="true"
-              required
-            />
+            <Input label="Email" type="email" autoComplete="true" required />
 
-            <Input
-              label="Senha"
-              type="password"
-              required
-            />
-      
-            <Button
-              text="Registrar"
-              type="submit"
-              form="register"
-            />
+            <Input label="Senha" type="password" required />
+
+            <Button text="Registrar" type="submit" form="register" />
 
             <span
               className="
-              w-32 text-center text-gray-300 m-auto
-              before:block before:content[''] before:w-60 before:h-px before:-translate-x-14 before:translate-y-3 before:border-x-16 before:border-gray-300
+              before:content[''] m-auto w-32 text-center
+              text-gray-300 before:block before:h-px before:w-60 before:-translate-x-14 before:translate-y-3 before:border-x-16 before:border-gray-300
               "
             >
               Ou entre com
             </span>
 
-            <button
-              className="w-full max-w-xs h-10 bg-gray-100 rounded-lg flex items-center justify-center relative"
-            >
+            <button className="relative flex h-10 w-full max-w-xs items-center justify-center rounded-lg bg-gray-100">
               <Image
-                className="ml-6 absolute left-0"
+                className="absolute left-0 ml-6"
                 src="/google.png"
                 alt="Google"
                 width={20}
                 height={20}
               />
-
               Entrar com o Google
             </button>
 
             <Link
               href="/login"
-              className="text-gray-500 m-auto hover:cursor-pointer hover:text-gray-600"
+              className="m-auto text-gray-500 hover:cursor-pointer hover:text-gray-600"
             >
               Já possui uma conta? Faça login
             </Link>

@@ -12,7 +12,7 @@ import Link from "next/link";
 type LoginProps = {
   email: string;
   password: string;
-}
+};
 
 export default function Login() {
   const createLoginForm = useForm<LoginProps>();
@@ -22,7 +22,7 @@ export default function Login() {
 
   const onSubmit: SubmitHandler<LoginProps> = async (data) => {
     await signIn(data);
-  }
+  };
 
   return (
     <div className="h-screen w-screen md:grid md:grid-flow-col md:grid-cols-2 md:items-center">
@@ -42,18 +42,9 @@ export default function Login() {
       <FormProvider {...createLoginForm}>
         <form id="login" onSubmit={handleSubmit(onSubmit)}>
           <div className="mt-12 grid justify-center gap-6 md:mt-0">
-            <Input
-              label="Email"
-              type="email"
-              autoComplete="true"
-              required
-            />
+            <Input label="Email" type="email" autoComplete="true" required />
 
-            <Input
-              label="Senha"
-              type="password"
-              required
-            />
+            <Input label="Senha" type="password" required />
 
             <Button text="Entre" type="submit" form="login" />
 
